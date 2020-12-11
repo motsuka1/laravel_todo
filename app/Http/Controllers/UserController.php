@@ -34,8 +34,16 @@ class UserController extends Controller
         //     'password' => 'password',
         // ]);
 
-        // $user = User::all();
-        // return $user;
+        $data = [
+            'name' => 'hanako yamada',
+            'email' => 'hanako@example.com',
+            'password' => 'password',
+        ];
+
+        User::create($data);
+
+        $user = User::all();
+        return $user;
 
         // User::where('name', 'Hanako Yamada')->update(['name' => 'Hanako Sato']);
 
