@@ -2,10 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
@@ -52,4 +53,23 @@ class User extends Authenticatable
     {
         return ucfirst($name);
     }
+
+    public static function uploadAvatar($image)
+    {
+        
+        $filename = $image->getClientOriginalName();
+        (new self())->deleteOldImage();
+        $image->storeAs('images', $filename, 'public');
+        auth()->user()->update(['avatar' => $filename]);
+        
+        return redirect()->back();
+    }
+
+    protected function deleteOldImage()
+    {
+        if($this->avatar){
+            Storage::delete('public/images/'.auth()->user()->avatar);
+        }
+    }
+
 }
